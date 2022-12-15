@@ -60,9 +60,10 @@ namespace BacalsoBOt
             throw new NotImplementedException();
         }
 
-        public void JumpRoomCell(string cell, string pad
+        public void JumpRoomCell(string cell="Enter", string pad="Spawn")
         {
-            throw new NotImplementedException();
+            Bot.Map.Jump(cell, pad);
+            Bot.Sleep(200);
         }
 
         public bool CheckInventory(int[] itemNames, int quantity, bool any = false, bool toInv = true)
