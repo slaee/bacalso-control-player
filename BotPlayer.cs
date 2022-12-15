@@ -40,7 +40,24 @@ namespace BacalsoBOt
 
         public bool CheckInventory(int[] itemIDs, int quantity, bool any = false, bool toInv = true)
         {
-            throw new NotImplementedException();
+            if (itemIDs == null)
+                return true;
+
+            foreach (int id in itemIDs)
+            {
+                if (CheckInventory(id, quant, toInv))
+                {
+                    if (any)
+                        return true;
+                    else
+                        continue;
+                }
+
+                if (!any)
+                    return false;
+            }
+
+            return !any;
         }
     }
 }
