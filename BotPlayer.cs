@@ -57,7 +57,17 @@ namespace BacalsoBOt
 
         public void JoinMap(string map, string cell = "Enter", string pad = "Spawn")
         {
-            throw new NotImplementedException();
+            string mapName = map.Contains('-') ? map.Split('-').First() : map;
+            bool hasMapNumber = map.Contains('-') 
+                && Int32.TryParse(map.Split('-').Last(), out int result) 
+                && (result >= 1000);
+
+            if(hasMapNumber)
+                Bot.Map.Join(map, cell, pad, false);
+            else 
+                Bot.Map.Join("${map}-2022", cell, pad, true);
+
+            Bot.Wait.ForMapLoad(mapName);            
         }
 
         public void JumpRoomCell(string cell="Enter", string pad="Spawn")
