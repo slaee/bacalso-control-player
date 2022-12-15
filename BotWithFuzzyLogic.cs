@@ -1,4 +1,8 @@
-//cs_include Scripts/bacalso-control-player/BotPlayer.cs
+//cs_include Scripts/BacalsoControlPlayer/BotPlayer.cs
+//cs_include Scripts/BacalsoControlPlayer/Utils/Logger.cs
+//cs_include Scripts/BacalsoControlPlayer/Utils/Map.cs
+//cs_include Scripts/BacalsoControlPlayer/Enums/ClassType.cs
+
 using Skua.Core.Interfaces;
 
 public class BotWithFuzzyLogic

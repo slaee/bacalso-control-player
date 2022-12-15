@@ -19,7 +19,7 @@ namespace BacalsoControlPlayer.Utils
 
         public Logger Instance => _instance ??= new Logger();
 
-        public  void Message(string message, [CallerMemberName] string caller = "", bool messageBox = false, bool stopBot = false)
+        public void Message(string message, [CallerMemberName] string caller = "", bool messageBox = false, bool stopBot = false)
         {
             Bot.Log($"[{DateTime.Now:HH:mm:ss}] ({caller})  {message}");
         }
