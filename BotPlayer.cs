@@ -41,7 +41,7 @@ namespace BacalsoBOt
             // TODO: Join map
 
             // TODO: Jump room cell
-            
+
 
             if (item == null)
             {
@@ -53,6 +53,16 @@ namespace BacalsoBOt
 
                 return;
             }
+        }
+
+        public void JoinMap(string map, string cell = "Enter", string pad = "Spawn")
+        {
+            throw new NotImplementedException();
+        }
+
+        public void JumpRoomCell(string cell, string pad
+        {
+            throw new NotImplementedException();
         }
 
         public bool CheckInventory(int[] itemNames, int quantity, bool any = false, bool toInv = true)
