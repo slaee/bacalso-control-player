@@ -28,6 +28,9 @@ namespace BacalsoBOt
     {
         private IScriptInterface Bot => IScriptInterface.Instance;
 
-        
+        public void HuntForItem(string item, int quantity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
