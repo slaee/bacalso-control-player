@@ -33,15 +33,13 @@ namespace BacalsoBOt
             throw new NotImplementedException();
         }
 
-        public void KillMonster(string map, string cell, string monster, string? item = null, int quantity = 1)
+        public void KillMonster(string map, string cell, string pad, string monster, string? item = null, int quantity = 1)
         {
             if(item != null && CheckInventory(item, quantity))
                 return;
 
-            // TODO: Join map
-
-            // TODO: Jump room cell
-
+            this.JoinMap(map, cell, pad);
+            this.JumpRoomCell(cell, pad);
 
             if (item == null)
             {
