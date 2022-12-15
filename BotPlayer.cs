@@ -37,7 +37,7 @@ namespace BacalsoBOt
             }
         }
 
-        public void KillMonster(string map, string cell, string pad, string monster, string? item = null, int quantity = 1)
+        public void KillMonster(string map, string cell, string pad, string monster, string? item = null, int quantity = 1, bool log = true)
         {
             if(item != null && CheckInventory(item, quantity))
                 return;
