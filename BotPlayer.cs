@@ -51,15 +51,15 @@ public class BotPlayer
     public bool FarmGearOn { get; set; } = true;
     public string[] FarmGear { get; set; } = { "Weapon", "Headpiece", "Cape" };
 
-    public void HuntForItem(string item, int quantity)
+    public void HuntForItem(string map, string item, int quantity)
     {
-        Log.Message($"Hunting for {item} x{quantity}");
+        Log.Message($"Hunting for {item} x{quantity} in {map}");
 
         this.EquipClass(ClassType.Farm);
         while (!Bot.ShouldExit && !CheckInventory(new string[] {item},quantity))
         {
-            this.KillMonster("celestialpast", "r2", "Left", "Blessed Deer", item, quantity);
-            this.KillMonster("celestialpast", "r3", "Left", "Blessed Deer", item, quantity);
+            this.KillMonster(map, "r2", "Left", "*", item, quantity);
+            this.KillMonster(map, "r3", "Left", "*", item, quantity);
         }
     }
 

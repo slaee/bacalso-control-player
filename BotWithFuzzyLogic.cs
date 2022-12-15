@@ -12,6 +12,6 @@ public class BotWithFuzzyLogic
 
     public void ScriptMain(IScriptInterface Bot)
     {
-        player.HuntForItem("Treasure Chest", 1);
+        player.HuntForItem("firewar", "Treasure Chest", 1);
     }
 }
