@@ -74,8 +74,6 @@ public class BotPlayer
         {
             if (log) Log.Message($"Killing {monster}");
             Bot.Kill.Monster(monster);
-            // TODO: Player Conditions using fuzzy logic
-
             return;
         }
         
@@ -93,7 +91,12 @@ public class BotPlayer
         while (!Bot.ShouldExit && !CheckInventory(item, quantity))
         {
             if (!Bot.Combat.StopAttacking)
+            {
                 Bot.Combat.Attack(monster);
+
+                // TODO: Fuzzy Logic for Health and Mana Control
+            }
+                
             Bot.Sleep(ActionDelay);
         }
     }
