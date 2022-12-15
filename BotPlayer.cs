@@ -27,7 +27,6 @@ public class BotPlayer
     private IScriptInterface Bot => IScriptInterface.Instance;
 
     private static BotPlayer _instance;
-    private bool _lastAggroStatus = false;
     public static BotPlayer Instance => _instance ??= new BotPlayer();
 
     public void HuntForItem(string item, int quantity)
@@ -53,10 +52,7 @@ public class BotPlayer
         {
             if (log)
                 Logger($"Killing {monster}");
-
-            ToggleAggro(true);
             Bot.Kill.Monster(monster);
-            ToggleAggro(false);
             // TODO: Player Conditions using fuzzy logic
 
             return;
@@ -68,45 +64,11 @@ public class BotPlayer
             Logger($"Killing {monster} for {item}, ({dynamicQuantity}/{quantity}) [Inventory = {item}]");
         }
 
-        ToggleAggro(true);
         while (!Bot.ShouldExit && !CheckInventory(item, quantity))
         {
             if (!Bot.Combat.StopAttacking)
                 Bot.Combat.Attack(monster);
             Bot.Sleep(1000);
-        }
-
-        ToggleAggro(false);
-        Bot.Sleep(1000);
-    }
-
-    public void ToggleAggro(bool enable)
-    {
-        if (enable)
-        {
-            if (_lastAggroStatus)
-            {
-                // If was previously aggro when untoggled
-                // Set aggro back and flip last aggro
-                Logger("Flipping aggro to False");
-                _lastAggroStatus = false;
-                Bot.Options.AggroMonsters = true;
-            }
-            else
-                return;
-        }
-        else
-        {
-            if (!Bot.Options.AggroMonsters)
-                return;
-            else
-            {
-                // If currently aggro, set last aggro to true
-                // and flip current aggro status
-                Logger("Flipping aggro to False");
-                _lastAggroStatus = true;
-                Bot.Options.AggroMonsters = false;
-            }
         }
     }
 
