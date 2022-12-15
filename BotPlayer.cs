@@ -28,6 +28,9 @@ namespace BacalsoBOt
     {
         private IScriptInterface Bot => IScriptInterface.Instance;
 
+        private static BotPlayer _instance;
+        public static BotPlayer Instance => _instance ??= new BotPlayer();
+
         public void HuntForItem(string item, int quantity)
         {
             while (!Bot.ShouldExit && CheckInventory(item, quantity))
