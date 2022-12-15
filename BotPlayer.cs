@@ -45,7 +45,7 @@ namespace BacalsoBOt
 
             foreach (string name in itemNames)
             {
-                if (CheckInventory(name, quant, toInv))
+                if (CheckInventory(name, quantity, toInv))
                 {
                     if (any)
                         return true;
