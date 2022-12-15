@@ -132,7 +132,7 @@ public class BotPlayer
     {
         SetFuzzyEngine();
         FuzzyEngine.Consequent = "PLAYERCONDITION";
-        Log.Message($"Defuzzified Value: {FuzzyEngine.Defuzzify()}");
+        Log.Message($"PLAYER CONDITION: {FuzzyEngine.Defuzzify()}");
     }
 
     private void SetMembers()
@@ -149,26 +149,26 @@ public class BotPlayer
         Mana.Add(new MembershipFunction("HIGH", 50.0, 55.0, 100.0, 100.0));
         _myMana = new LinguisticVariable("MANA", Mana);
 
-        PlayerCondition.Add(new MembershipFunction("VERYCRITICAL", 0.0, 0.0, 1.0, 3.0));
-        PlayerCondition.Add(new MembershipFunction("CRITICAL", 2.5, 2.7, 2.8, 3.0));
-        PlayerCondition.Add(new MembershipFunction("UNSTABLE", 2.9, 3.1, 4.0, 4.5));
-        PlayerCondition.Add(new MembershipFunction("AVERAGE", 4.5, 5.0, 5.0, 6.0));
-        PlayerCondition.Add(new MembershipFunction("STABLE", 6.0, 6.5, 7.0, 7.5));
-        PlayerCondition.Add(new MembershipFunction("VERYSTABLE", 7.0, 7.5, 10, 10));
+        PlayerCondition.Add(new MembershipFunction("REST_A_WHOLE_LOT", 0.0, 0.0, 1.0, 3.0));
+        PlayerCondition.Add(new MembershipFunction("REST_A_LOT", 2.5, 2.7, 2.8, 3.0));
+        PlayerCondition.Add(new MembershipFunction("REST_A_GOODAMT", 2.9, 3.1, 4.0, 4.5));
+        PlayerCondition.Add(new MembershipFunction("REST_A_LITTLE", 4.5, 5.0, 5.0, 6.0));
+        PlayerCondition.Add(new MembershipFunction("REST_A_VERYLITTLE", 6.0, 6.5, 7.0, 7.5));
+        PlayerCondition.Add(new MembershipFunction("DONTREST", 7.0, 7.5, 10, 10));
         _myCondition = new LinguisticVariable("PLAYERCONDITION", PlayerCondition);
     }
 
     private void SetRules()
     {
-        FuzzyRules.Add(new FuzzyRule("IF (HEALTH IS LOW) AND (MANA IS LOW) THEN PLAYERCONDITION IS VERYCRITICAL"));
-        FuzzyRules.Add(new FuzzyRule("IF (HEALTH IS NORMAL) AND (MANA IS LOW) THEN PLAYERCONDITION IS CRITICAL"));
-        FuzzyRules.Add(new FuzzyRule("IF (HEALTH IS LOW) AND (MANA IS NORMAL) THEN PLAYERCONDITION IS CRITICAL"));
-        FuzzyRules.Add(new FuzzyRule("IF (HEALTH IS HIGH) AND (MANA IS LOW) THEN PLAYERCONDITION IS UNSTABLE"));
-        FuzzyRules.Add(new FuzzyRule("IF (HEALTH IS LOW) AND (MANA IS HIGH) THEN PLAYERCONDITION IS UNSTABLE"));
-        FuzzyRules.Add(new FuzzyRule("IF (HEALTH IS NORMAL) AND (MANA IS NORMAL) THEN PLAYERCONDITION IS AVERAGE"));
-        FuzzyRules.Add(new FuzzyRule("IF (HEALTH IS HIGH) AND (MANA IS NORMAL) THEN PLAYERCONDITION IS STABLE"));
-        FuzzyRules.Add(new FuzzyRule("IF (HEALTH IS NORMAL) AND (MANA IS HIGH) THEN PLAYERCONDITION IS STABLE"));
-        FuzzyRules.Add(new FuzzyRule("IF (HEALTH IS HIGH) AND (MANA IS HIGH) THEN PLAYERCONDITION IS VERYSTABLE"));
+        FuzzyRules.Add(new FuzzyRule("IF (HEALTH IS LOW) AND (MANA IS LOW) THEN PLAYERCONDITION IS REST_A_WHOLE_LOT"));
+        FuzzyRules.Add(new FuzzyRule("IF (HEALTH IS NORMAL) AND (MANA IS LOW) THEN PLAYERCONDITION IS REST_A_LOT"));
+        FuzzyRules.Add(new FuzzyRule("IF (HEALTH IS LOW) AND (MANA IS NORMAL) THEN PLAYERCONDITION IS REST_A_LOT"));
+        FuzzyRules.Add(new FuzzyRule("IF (HEALTH IS HIGH) AND (MANA IS LOW) THEN PLAYERCONDITION IS REST_A_GOODAMT"));
+        FuzzyRules.Add(new FuzzyRule("IF (HEALTH IS LOW) AND (MANA IS HIGH) THEN PLAYERCONDITION IS REST_A_GOODAMT"));
+        FuzzyRules.Add(new FuzzyRule("IF (HEALTH IS NORMAL) AND (MANA IS NORMAL) THEN PLAYERCONDITION IS REST_A_LITTLE"));
+        FuzzyRules.Add(new FuzzyRule("IF (HEALTH IS HIGH) AND (MANA IS NORMAL) THEN PLAYERCONDITION IS REST_A_VERYLITTLE"));
+        FuzzyRules.Add(new FuzzyRule("IF (HEALTH IS NORMAL) AND (MANA IS HIGH) THEN PLAYERCONDITION IS REST_A_VERYLITTLE"));
+        FuzzyRules.Add(new FuzzyRule("IF (HEALTH IS HIGH) AND (MANA IS HIGH) THEN PLAYERCONDITION IS DONTREST"));
         FuzzyEngine.FuzzyRuleCollection = FuzzyRules;
     }
 
