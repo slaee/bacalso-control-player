@@ -29,10 +29,23 @@ public class BotPlayer
     private static BotPlayer _instance;
     public static BotPlayer Instance => _instance ??= new BotPlayer();
 
+    public int ActionDelay { get; set; } = 700;
+    public int ExitCombatDelay { get; set; } = 1600;
+    public string SoloClass { get; set; } = "Generic";
+    public ClassUseMode SoloUseMode { get; set; } = ClassUseMode.Base;
+    public bool SoloGearOn { get; set; } = true;
+    public string[] SoloGear { get; set; } = { "Weapon", "Headpiece", "Cape" };
+    public string FarmClass { get; set; } = "Generic";
+    public ClassUseMode FarmUseMode { get; set; } = ClassUseMode.Base;
+    public bool FarmGearOn { get; set; } = true;
+    public string[] FarmGear { get; set; } = { "Weapon", "Headpiece", "Cape" };
+
     public void HuntForItem(string item, int quantity)
     {
         this.Logger($"Hunting for {item} x{quantity}");
         string [] items = { item };
+
+        this.EquipClass(ClassType.Farm);
         while (!Bot.ShouldExit && !CheckInventory(items, quantity))
         {
             this.KillMonster("celestialpast", "r2", "Left", "Blessed Deer", item, quantity);
@@ -140,4 +153,144 @@ public class BotPlayer
     {
         Bot.Log($"[{DateTime.Now:HH:mm:ss}] ({caller})  {message}");
     }
+
+    ClassType currentClass = ClassType.None;
+    bool usingSoloGeneric = false;
+    bool usingFarmGeneric = false;
+
+    private bool logEquip = true;
+   
+    public void EquipClass(ClassType classToUse)
+    {
+        if (currentClass == classToUse && Bot.Skills.TimerRunning)
+            return;
+
+        switch (classToUse)
+        {
+            case ClassType.Farm:
+                if (!usingFarmGeneric)
+                {
+                    if (FarmGearOn & Bot.Player.CurrentClass?.Name != FarmClass)
+                    {
+                        logEquip = false;
+                        Bot.Sleep(ActionDelay);
+                        Equip(FarmGear);
+                        logEquip = true;
+                    }
+
+                    int? class_id = Bot.Inventory.Items.Find(i => i.Name.ToLower().Trim() == FarmClass.ToLower().Trim() && i.Category == ItemCategory.Class)?.ID;
+                    if (class_id == null)
+                        Logger("Class not found", stopBot: true);
+                    Bot.Wait.ForItemEquip(class_id ?? 0);
+                    Bot.Skills.StartAdvanced(FarmClass, true, FarmUseMode);
+                    break;
+                }
+                Bot.Skills.StartAdvanced(Bot.Player.CurrentClass?.Name ?? "generic", false);
+                break;
+            default:
+                if (!usingSoloGeneric)
+                {
+                    if (SoloGearOn & Bot.Player.CurrentClass?.Name != SoloClass)
+                    {
+                        logEquip = false;
+                        Bot.Sleep(ActionDelay);
+                        Equip(SoloGear);
+                        logEquip = true;
+                    }
+                    int? class_id = Bot.Inventory.Items.Find(i => i.Name.ToLower().Trim() == SoloClass.ToLower().Trim() && i.Category == ItemCategory.Class)?.ID;
+                    if (class_id == null)
+                        Logger("Class not found", stopBot: true);
+                    Bot.Wait.ForItemEquip(class_id ?? 0);
+
+                    Bot.Skills.StartAdvanced(SoloClass, true, SoloUseMode);
+                    break;
+                }
+                Bot.Skills.StartAdvanced(Bot.Player.CurrentClass?.Name ?? "generic", false);
+                break;
+        }
+        currentClass = classToUse;
+    }
+
+    public void Equip(params string[] gear)
+    {
+        if (gear == null)
+            return;
+
+        JumpWait();
+
+        foreach (string Item in gear)
+        {
+            if ((Item != "Weapon" && Item != "Headpiece" && Item != "Cape" && Item != "False") && CheckInventory(Item) && !Bot.Inventory.IsEquipped(Item))
+            {
+                Bot.Inventory.EquipItem(Item);
+                Bot.Sleep(ActionDelay);
+                if (logEquip)
+                    Logger($"Equipped {Item}");
+            }
+        }
+    }
+
+    public void JumpWait()
+    {
+        if (!Bot.Player.InCombat)
+            return;
+
+        List<string> MonsterCells = Bot.Monsters.MapMonsters.Select(monster => monster.Cell).ToList();
+
+        if (!MonsterCells.Contains(Bot.Player.Cell))
+            return;
+        string[] blankCells = new[] { "wait", "blank" };
+        string cell = string.Empty;
+        string pad = string.Empty;
+        bool jumpTwice = false;
+
+        if (!MonsterCells.Contains("Enter"))
+        {
+            cell = "Enter";
+            pad = "Spawn";
+        }
+        else
+        {
+            foreach (string _cell in Bot.Map.Cells)
+            {
+                if (_cell == Bot.Player.Cell || blankCells.Contains(_cell.ToLower()) || _cell.ToLower().Contains("cut"))
+                    continue;
+                if (!MonsterCells.Contains(cell))
+                {
+                    cell = _cell;
+                    pad = "Left";
+                    break;
+                }
+            }
+        }
+
+        if (string.IsNullOrEmpty(cell) || string.IsNullOrEmpty(pad))
+        {
+            cell = Bot.Player.Cell;
+            pad = Bot.Player.Pad;
+            jumpTwice = true;
+        }
+
+        if (lastJumpWait != $"{Bot.Map.Name} | {cell} | {pad}" || Bot.Player.InCombat)
+        {
+            JumpRoomCell(cell, pad);
+            if (jumpTwice)
+                JumpRoomCell(cell, pad);
+
+            lastJumpWait = $"{Bot.Map.Name} | {cell} | {pad}";
+
+            Bot.Sleep(ExitCombatDelay < 200 ? ExitCombatDelay : ExitCombatDelay - 200);
+            Bot.Wait.ForCombatExit();
+        }
+        Bot.Combat.Exit();
+        Bot.Wait.ForCombatExit();
+    }
+    private string lastJumpWait = "";
+}
+
+public enum ClassType
+{
+    Solo,
+    Farm,
+    None
 }
