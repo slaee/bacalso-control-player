@@ -30,7 +30,11 @@ namespace BacalsoBOt
 
         public void HuntForItem(string item, int quantity)
         {
-            throw new NotImplementedException();
+            while (!Bot.ShouldExit && CheckInventory(item, quantity))
+            {
+                this.KillMonster("celestialpast", "r2", "Left", "Blessed Deer", "Treasure Chest");
+                this.KillMonster("celestialpast", "r3", "Left", "Blessed Deer", "Treasure Chest");
+            }
         }
 
         public void KillMonster(string map, string cell, string pad, string monster, string? item = null, int quantity = 1)
