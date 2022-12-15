@@ -38,14 +38,14 @@ namespace BacalsoBOt
             throw new NotImplementedException();
         }
 
-        public bool CheckInventory(int[] itemIDs, int quantity, bool any = false, bool toInv = true)
+        public bool CheckInventory(int[] itemNames, int quantity, bool any = false, bool toInv = true)
         {
-            if (itemIDs == null)
+            if (itemNames == null)
                 return true;
 
-            foreach (int id in itemIDs)
+            foreach (string name in itemNames)
             {
-                if (CheckInventory(id, quant, toInv))
+                if (CheckInventory(name, quant, toInv))
                 {
                     if (any)
                         return true;
