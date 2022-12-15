@@ -37,5 +37,10 @@ namespace BacalsoBOt
         {
             throw new NotImplementedException();
         }
+
+        public bool CheckInventory(int[] itemIDs, int quantity, bool any = false, bool toInv = true)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
