@@ -35,7 +35,24 @@ namespace BacalsoBOt
 
         public void KillMonster(string map, string cell, string monster, string? item = null, int quantity = 1)
         {
-            throw new NotImplementedException();
+            if(item != null && CheckInventory(item, quantity))
+                return;
+
+            // TODO: Join map
+
+            // TODO: Jump room cell
+            
+
+            if (item == null)
+            {
+                if (log)
+                    Logger($"Killing {monster}");
+                Bot.Kill.Monster(monster);
+
+                // TODO: Player Conditions using fuzzy logic
+
+                return;
+            }
         }
 
         public bool CheckInventory(int[] itemNames, int quantity, bool any = false, bool toInv = true)
