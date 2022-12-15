@@ -79,7 +79,6 @@ public class BotPlayer
         while (!Bot.ShouldExit && !CheckInventory(new string[] {item},quantity))
         {
             this.KillMonster(map, "r2", "Bottom", "*", item, quantity);
-            this.KillMonster(map, "r3", "Bottom", "*", item, quantity);
         }
     }
 
@@ -107,14 +106,23 @@ public class BotPlayer
             int dynamicQuantity = Bot.Inventory.GetQuantity(item);
             Log.Message($"Killing {monster} for {item}, ({dynamicQuantity}/{quantity}) [Inventory = {item}]");
         }
-        
+        double defuzzyVal = 0.0f;
         while (!Bot.ShouldExit && !CheckInventory(item, quantity))
         {
             if (!Bot.Combat.StopAttacking)
             {
                 FuzzifyValues();
                 Bot.Combat.Attack(monster);
-                Defuzzy();
+                defuzzyVal = Defuzzy();
+                if (defuzzyVal < 8)
+                {
+                    Map.JumpRoomCell("Enter", "Spawn");
+                    Bot.Player.Rest(true);
+                }
+                else if (defuzzyVal > 8 && Bot.Player.Cell == "Enter")
+                {
+                    Map.JumpRoomCell("r2", "Bottom");
+                }
             }
             Bot.Sleep(ActionDelay);
         }
@@ -128,11 +136,14 @@ public class BotPlayer
         _myMana.Fuzzify("HIGH");
     }
 
-    private void Defuzzy()
+    private double Defuzzy()
     {
         SetFuzzyEngine();
         FuzzyEngine.Consequent = "PLAYERCONDITION";
-        Log.Message($"PLAYER CONDITION: {FuzzyEngine.Defuzzify()}");
+        double defuzzifyValue = FuzzyEngine.Defuzzify();;
+        Log.Message($"PLAYER CONDITION: {defuzzifyValue}");
+        
+        return defuzzifyValue;
     }
 
     private void SetMembers()
