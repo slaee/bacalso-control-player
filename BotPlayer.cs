@@ -22,85 +22,160 @@ using Skua.Core.Models.Skills;
 using Skua.Core.Options;
 using Skua.Core.Utils;
 
-namespace BacalsoBOt
+public class BotPlayer
 {
-    public class BotPlayer
+    private IScriptInterface Bot => IScriptInterface.Instance;
+
+    private static BotPlayer _instance;
+    private bool _lastAggroStatus = false;
+    public static BotPlayer Instance => _instance ??= new BotPlayer();
+
+    public void HuntForItem(string item, int quantity)
     {
-        private IScriptInterface Bot => IScriptInterface.Instance;
-
-        private static BotPlayer _instance;
-        public static BotPlayer Instance => _instance ??= new BotPlayer();
-
-        public void HuntForItem(string item, int quantity)
+        this.Logger($"Hunting for {item} x{quantity}");
+        string [] items = { item };
+        while (!Bot.ShouldExit && !CheckInventory(items, quantity))
         {
-            while (!Bot.ShouldExit && CheckInventory(item, quantity))
+            this.KillMonster("celestialpast", "r2", "Left", "Blessed Deer", item, quantity);
+            this.KillMonster("celestialpast", "r3", "Left", "Blessed Deer", item, quantity);
+        }
+    }
+
+    public void KillMonster(string map, string cell, string pad, string monster, string? item = null, int quantity = 1, bool log = true)
+    {
+        if(item != null && CheckInventory(item, quantity))
+            return;
+
+        this.JoinMap(map, cell, pad);
+        this.JumpRoomCell(cell, pad);
+
+        if (item == null)
+        {
+            if (log)
+                Logger($"Killing {monster}");
+
+            ToggleAggro(true);
+            Bot.Kill.Monster(monster);
+            ToggleAggro(false);
+            // TODO: Player Conditions using fuzzy logic
+
+            return;
+        }
+
+        if (log)
+        {
+            int dynamicQuantity = Bot.Inventory.GetQuantity(item);
+            Logger($"Killing {monster} for {item}, ({dynamicQuantity}/{quantity}) [Inventory = {item}]");
+        }
+
+        ToggleAggro(true);
+        while (!Bot.ShouldExit && !CheckInventory(item, quantity))
+        {
+            if (!Bot.Combat.StopAttacking)
+                Bot.Combat.Attack(monster);
+            Bot.Sleep(1000);
+        }
+
+        ToggleAggro(false);
+        Bot.Sleep(1000);
+    }
+
+    public void ToggleAggro(bool enable)
+    {
+        if (enable)
+        {
+            if (_lastAggroStatus)
             {
-                this.KillMonster("celestialpast", "r2", "Left", "Blessed Deer", "Treasure Chest");
-                this.KillMonster("celestialpast", "r3", "Left", "Blessed Deer", "Treasure Chest");
+                // If was previously aggro when untoggled
+                // Set aggro back and flip last aggro
+                Logger("Flipping aggro to False");
+                _lastAggroStatus = false;
+                Bot.Options.AggroMonsters = true;
+            }
+            else
+                return;
+        }
+        else
+        {
+            if (!Bot.Options.AggroMonsters)
+                return;
+            else
+            {
+                // If currently aggro, set last aggro to true
+                // and flip current aggro status
+                Logger("Flipping aggro to False");
+                _lastAggroStatus = true;
+                Bot.Options.AggroMonsters = false;
             }
         }
+    }
 
-        public void KillMonster(string map, string cell, string pad, string monster, string? item = null, int quantity = 1, bool log = true)
+    public void JoinMap(string map, string cell = "Enter", string pad = "Spawn")
+    {
+        string mapName = map.Contains('-') ? map.Split('-').First() : map;
+        bool hasMapNumber = map.Contains('-') 
+            && Int32.TryParse(map.Split('-').Last(), out int result) 
+            && (result >= 1000);
+
+        if(hasMapNumber)
+            Bot.Map.Join(map, cell, pad, false);
+        else 
+            Bot.Map.Join($"{map}-2022", cell, pad, true);
+
+        Bot.Wait.ForMapLoad(mapName);            
+    }
+
+    public void JumpRoomCell(string cell="Enter", string pad="Spawn")
+    {
+        Bot.Map.Jump(cell, pad);
+        Bot.Sleep(200);
+    }
+
+    public bool CheckInventory(string[] itemNames, int quantity, bool any = false, bool toInv = true)
+    {
+        if (itemNames == null)
+            return true;
+
+        foreach (string name in itemNames)
         {
-            if(item != null && CheckInventory(item, quantity))
-                return;
-
-            this.JoinMap(map, cell, pad);
-            this.JumpRoomCell(cell, pad);
-
-            if (item == null)
+            if (CheckInventory(name, quantity, toInv))
             {
-                if (log)
-                    Logger($"Killing {monster}");
-                Bot.Kill.Monster(monster);
-
-                // TODO: Player Conditions using fuzzy logic
-
-                return;
+                if (any)
+                    return true;
+                else
+                    continue;
             }
+
+            if (!any)
+                return false;
         }
 
-        public void JoinMap(string map, string cell = "Enter", string pad = "Spawn")
+        return !any;
+    }
+
+    public bool CheckInventory(string item, int quant = 1, bool toInv = true)
+    {
+        if (Bot.TempInv.Contains(item, quant))
+            return true;
+
+        if (Bot.Inventory.Contains(item, quant))
+            return true;
+
+        if (Bot.Bank.Contains(item))
         {
-            string mapName = map.Contains('-') ? map.Split('-').First() : map;
-            bool hasMapNumber = map.Contains('-') 
-                && Int32.TryParse(map.Split('-').Last(), out int result) 
-                && (result >= 1000);
-
-            if(hasMapNumber)
-                Bot.Map.Join(map, cell, pad, false);
-            else 
-                Bot.Map.Join("${map}-2022", cell, pad, true);
-
-            Bot.Wait.ForMapLoad(mapName);            
-        }
-
-        public void JumpRoomCell(string cell="Enter", string pad="Spawn")
-        {
-            Bot.Map.Jump(cell, pad);
-            Bot.Sleep(200);
-        }
-
-        public bool CheckInventory(int[] itemNames, int quantity, bool any = false, bool toInv = true)
-        {
-            if (itemNames == null)
+            if ((toInv && Bot.Inventory.GetQuantity(item) >= quant) ||
+               (!toInv && Bot.Bank.TryGetItem(item, out InventoryItem? _item) && _item != null && _item.Quantity >= quant))
                 return true;
-
-            foreach (string name in itemNames)
-            {
-                if (CheckInventory(name, quantity, toInv))
-                {
-                    if (any)
-                        return true;
-                    else
-                        continue;
-                }
-
-                if (!any)
-                    return false;
-            }
-
-            return !any;
         }
+
+        if (Bot.House.Contains(item))
+            return true;
+
+        return false;
+    }
+
+    public void Logger(string message = "", [CallerMemberName] string caller = "", bool messageBox = false, bool stopBot = false)
+    {
+        Bot.Log($"[{DateTime.Now:HH:mm:ss}] ({caller})  {message}");
     }
 }
