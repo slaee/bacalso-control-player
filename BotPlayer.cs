@@ -32,5 +32,10 @@ namespace BacalsoBOt
         {
             throw new NotImplementedException();
         }
+
+        public void KillMonster(string map, string cell, string monster, string? item = null, int quantity = 1)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
