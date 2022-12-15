@@ -1,9 +1,16 @@
+//cs_include Scripts/BacalsoControlPlayer/FuzzyLogic/FuzzyEngine.cs
+//cs_include Scripts/BacalsoControlPlayer/FuzzyLogic/FuzzyRule.cs
+//cs_include Scripts/BacalsoControlPlayer/FuzzyLogic/FuzzyRuleCollection.cs
+//cs_include Scripts/BacalsoControlPlayer/FuzzyLogic/LinguisticVariable.cs
+//cs_include Scripts/BacalsoControlPlayer/FuzzyLogic/MembershipFunction.cs
+//cs_include Scripts/BacalsoControlPlayer/FuzzyLogic/MembershipFunctionCollection.cs
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 
-namespace BacalsoControlPlayer.FuzzyLogics
+namespace BacalsoControlPlayer.FuzzyLogic
 {
     /// <summary>
     /// Represents a collection of rules.

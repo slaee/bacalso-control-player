@@ -1,3 +1,10 @@
+//cs_include Scripts/BacalsoControlPlayer/FuzzyLogic/FuzzyRule.cs
+//cs_include Scripts/BacalsoControlPlayer/FuzzyLogic/FuzzyRuleCollection.cs
+//cs_include Scripts/BacalsoControlPlayer/FuzzyLogic/LinguisticVariable.cs
+//cs_include Scripts/BacalsoControlPlayer/FuzzyLogic/LinguisticVariableCollection.cs
+//cs_include Scripts/BacalsoControlPlayer/FuzzyLogic/MembershipFunction.cs
+//cs_include Scripts/BacalsoControlPlayer/FuzzyLogic/MembershipFunctionCollection.cs
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -98,21 +105,21 @@ namespace BacalsoControlPlayer.FuzzyLogic
             return value;
         }
 
-        void ReadVariable(XmlNode xmlNode)
-        {
-            LinguisticVariable linguisticVariable = this.linguisticVariableCollection.Find(xmlNode.Attributes["NAME"].InnerText);
+        // void ReadVariable(XmlNode xmlNode)
+        // {
+        //     LinguisticVariable linguisticVariable = this.linguisticVariableCollection.Find(xmlNode.Attributes["NAME"].InnerText);
 
-            foreach (XmlNode termNode in xmlNode.ChildNodes)
-            {
-                string[] points = termNode.Attributes["POINTS"].InnerText.Split();
-                linguisticVariable.MembershipFunctionCollection.Add(new MembershipFunction(
-                    termNode.Attributes["NAME"].InnerText,
-                    Convert.ToDouble(points[0]),
-                    Convert.ToDouble(points[1]),
-                    Convert.ToDouble(points[2]),
-                    Convert.ToDouble(points[3])));
-            }
-        }
+        //     foreach (XmlNode termNode in xmlNode.ChildNodes)
+        //     {
+        //         string[] points = termNode.Attributes["POINTS"].InnerText.Split();
+        //         linguisticVariable.MembershipFunctionCollection.Add(new MembershipFunction(
+        //             termNode.Attributes["NAME"].InnerText,
+        //             Convert.ToDouble(points[0]),
+        //             Convert.ToDouble(points[1]),
+        //             Convert.ToDouble(points[2]),
+        //             Convert.ToDouble(points[3])));
+        //     }
+        // }
 
         #endregion
 
@@ -197,130 +204,130 @@ namespace BacalsoControlPlayer.FuzzyLogic
         /// Sets the FilePath property and saves the project into a FCL-like XML file.
         /// </summary>
         /// <param name="path">Path of the destination document.</param>
-        public void Save(string path)
-        {
-            this.FilePath = path;
-            this.Save();
-        }
+        // public void Save(string path)
+        // {
+        //     this.FilePath = path;
+        //     this.Save();
+        // }
 
         /// <summary>
         /// Saves the project into a FCL-like XML file.
         /// </summary>
-        public void Save()
-        {
-            if (this.filePath == String.Empty)
-                throw new Exception("FilePath not set");
+        // public void Save()
+        // {
+        //     if (this.filePath == String.Empty)
+        //         throw new Exception("FilePath not set");
 
-            int i = 0;
-            XmlTextWriter xmlTextWriter = new XmlTextWriter(this.filePath, Encoding.UTF8);
-            xmlTextWriter.Formatting = Formatting.Indented;
-            xmlTextWriter.WriteStartDocument(true);
-            xmlTextWriter.WriteStartElement("FUNCTION_BLOCK");
+        //     int i = 0;
+        //     XmlTextWriter xmlTextWriter = new XmlTextWriter(this.filePath, Encoding.UTF8);
+        //     xmlTextWriter.Formatting = Formatting.Indented;
+        //     xmlTextWriter.WriteStartDocument(true);
+        //     xmlTextWriter.WriteStartElement("FUNCTION_BLOCK");
 
-            foreach (LinguisticVariable linguisticVariable in this.linguisticVariableCollection)
-            {
-                if (linguisticVariable.Name == this.consequent)
-                    xmlTextWriter.WriteStartElement("VAR_OUTPUT");
-                else
-                    xmlTextWriter.WriteStartElement("VAR_INPUT");
+        //     foreach (LinguisticVariable linguisticVariable in this.linguisticVariableCollection)
+        //     {
+        //         if (linguisticVariable.Name == this.consequent)
+        //             xmlTextWriter.WriteStartElement("VAR_OUTPUT");
+        //         else
+        //             xmlTextWriter.WriteStartElement("VAR_INPUT");
 
-                xmlTextWriter.WriteAttributeString("NAME", linguisticVariable.Name);
-                xmlTextWriter.WriteAttributeString("TYPE", "REAL");
-                xmlTextWriter.WriteAttributeString("RANGE",
-                    linguisticVariable.MinValue().ToString() + " " +
-                    linguisticVariable.MaxValue().ToString());
-                xmlTextWriter.WriteEndElement();
-            }
+        //         xmlTextWriter.WriteAttributeString("NAME", linguisticVariable.Name);
+        //         xmlTextWriter.WriteAttributeString("TYPE", "REAL");
+        //         xmlTextWriter.WriteAttributeString("RANGE",
+        //             linguisticVariable.MinValue().ToString() + " " +
+        //             linguisticVariable.MaxValue().ToString());
+        //         xmlTextWriter.WriteEndElement();
+        //     }
 
-            foreach (LinguisticVariable linguisticVariable in this.linguisticVariableCollection)
-            {
-                if (linguisticVariable.Name == this.consequent)
-                {
-                    xmlTextWriter.WriteStartElement("DEFUZZIFY");
-                    xmlTextWriter.WriteAttributeString("METHOD", "CoG");
-                    xmlTextWriter.WriteAttributeString("ACCU", "MAX");
-                }
-                else
-                    xmlTextWriter.WriteStartElement("FUZZIFY");
+        //     foreach (LinguisticVariable linguisticVariable in this.linguisticVariableCollection)
+        //     {
+        //         if (linguisticVariable.Name == this.consequent)
+        //         {
+        //             xmlTextWriter.WriteStartElement("DEFUZZIFY");
+        //             xmlTextWriter.WriteAttributeString("METHOD", "CoG");
+        //             xmlTextWriter.WriteAttributeString("ACCU", "MAX");
+        //         }
+        //         else
+        //             xmlTextWriter.WriteStartElement("FUZZIFY");
                 
-                xmlTextWriter.WriteAttributeString("NAME", linguisticVariable.Name);
+        //         xmlTextWriter.WriteAttributeString("NAME", linguisticVariable.Name);
 
-                foreach (MembershipFunction membershipFunction in linguisticVariable.MembershipFunctionCollection)
-                {
-                    xmlTextWriter.WriteStartElement("TERM");
-                    xmlTextWriter.WriteAttributeString("NAME", membershipFunction.Name);
-                    xmlTextWriter.WriteAttributeString("POINTS",
-                        membershipFunction.X0 + " " +
-                        membershipFunction.X1 + " " +
-                        membershipFunction.X2 + " " +
-                        membershipFunction.X3);
-                    xmlTextWriter.WriteEndElement();
-                }
+        //         foreach (MembershipFunction membershipFunction in linguisticVariable.MembershipFunctionCollection)
+        //         {
+        //             xmlTextWriter.WriteStartElement("TERM");
+        //             xmlTextWriter.WriteAttributeString("NAME", membershipFunction.Name);
+        //             xmlTextWriter.WriteAttributeString("POINTS",
+        //                 membershipFunction.X0 + " " +
+        //                 membershipFunction.X1 + " " +
+        //                 membershipFunction.X2 + " " +
+        //                 membershipFunction.X3);
+        //             xmlTextWriter.WriteEndElement();
+        //         }
 
-                xmlTextWriter.WriteEndElement();
-            }
+        //         xmlTextWriter.WriteEndElement();
+        //     }
 
-            xmlTextWriter.WriteStartElement("RULEBLOCK");
-            xmlTextWriter.WriteAttributeString("AND", "MIN");
-            xmlTextWriter.WriteAttributeString("OR", "MAX");
+        //     xmlTextWriter.WriteStartElement("RULEBLOCK");
+        //     xmlTextWriter.WriteAttributeString("AND", "MIN");
+        //     xmlTextWriter.WriteAttributeString("OR", "MAX");
 
-            foreach (FuzzyRule fuzzyRule in this.fuzzyRuleCollection)
-            {
-                i++;
-                xmlTextWriter.WriteStartElement("RULE");
-                xmlTextWriter.WriteAttributeString("NUMBER", i.ToString());
-                xmlTextWriter.WriteAttributeString("TEXT", fuzzyRule.Text);
-                xmlTextWriter.WriteEndElement();
-            }
+        //     foreach (FuzzyRule fuzzyRule in this.fuzzyRuleCollection)
+        //     {
+        //         i++;
+        //         xmlTextWriter.WriteStartElement("RULE");
+        //         xmlTextWriter.WriteAttributeString("NUMBER", i.ToString());
+        //         xmlTextWriter.WriteAttributeString("TEXT", fuzzyRule.Text);
+        //         xmlTextWriter.WriteEndElement();
+        //     }
             
-            xmlTextWriter.WriteEndElement();
+        //     xmlTextWriter.WriteEndElement();
 
-            xmlTextWriter.WriteEndElement();
-            xmlTextWriter.WriteEndDocument();
-            xmlTextWriter.Close();
-        }
+        //     xmlTextWriter.WriteEndElement();
+        //     xmlTextWriter.WriteEndDocument();
+        //     xmlTextWriter.Close();
+        // }
 
         /// <summary>
         /// Sets the FilePath property and loads a project from a FCL-like XML file.
         /// </summary>
         /// <param name="path">Path of the source file.</param>
-        public void Load(string path)
-        {
-            this.FilePath = path;
-            this.Load();
-        }
+        // public void Load(string path)
+        // {
+        //     this.FilePath = path;
+        //     this.Load();
+        // }
 
         /// <summary>
         /// Loads a project from a FCL-like XML file.
         /// </summary>
-        public void Load()
-        {
-            if (this.filePath == String.Empty)
-                throw new Exception("FilePath not set");
+        // public void Load()
+        // {
+        //     if (this.filePath == String.Empty)
+        //         throw new Exception("FilePath not set");
 
-            XmlDocument xmlDocument = new XmlDocument();
-            xmlDocument.Load(this.filePath);
+        //     XmlDocument xmlDocument = new XmlDocument();
+        //     xmlDocument.Load(this.filePath);
 
-            foreach (XmlNode xmlNode in xmlDocument.GetElementsByTagName("VAR_INPUT"))
-            {
-                this.LinguisticVariableCollection.Add(new LinguisticVariable(xmlNode.Attributes["NAME"].InnerText));
-            }
+        //     foreach (XmlNode xmlNode in xmlDocument.GetElementsByTagName("VAR_INPUT"))
+        //     {
+        //         this.LinguisticVariableCollection.Add(new LinguisticVariable(xmlNode.Attributes["NAME"].InnerText));
+        //     }
 
-            this.consequent = xmlDocument.GetElementsByTagName("VAR_OUTPUT")[0].Attributes["NAME"].InnerText;
-            this.LinguisticVariableCollection.Add(new LinguisticVariable(this.consequent));
+        //     this.consequent = xmlDocument.GetElementsByTagName("VAR_OUTPUT")[0].Attributes["NAME"].InnerText;
+        //     this.LinguisticVariableCollection.Add(new LinguisticVariable(this.consequent));
 
-            foreach (XmlNode xmlNode in xmlDocument.GetElementsByTagName("FUZZIFY"))
-            {
-                ReadVariable(xmlNode);
-            }
+        //     foreach (XmlNode xmlNode in xmlDocument.GetElementsByTagName("FUZZIFY"))
+        //     {
+        //         ReadVariable(xmlNode);
+        //     }
 
-            ReadVariable(xmlDocument.GetElementsByTagName("DEFUZZIFY")[0]);
+        //     ReadVariable(xmlDocument.GetElementsByTagName("DEFUZZIFY")[0]);
 
-            foreach (XmlNode xmlNode in xmlDocument.GetElementsByTagName("RULE"))
-            {
-                this.fuzzyRuleCollection.Add(new FuzzyRule(xmlNode.Attributes["TEXT"].InnerText));
-            }
-        }
+        //     foreach (XmlNode xmlNode in xmlDocument.GetElementsByTagName("RULE"))
+        //     {
+        //         this.fuzzyRuleCollection.Add(new FuzzyRule(xmlNode.Attributes["TEXT"].InnerText));
+        //     }
+        // }
 
         #endregion
     }

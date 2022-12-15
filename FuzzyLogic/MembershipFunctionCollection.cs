@@ -1,3 +1,10 @@
+//cs_include Scripts/BacalsoControlPlayer/FuzzyLogic/FuzzyEngine.cs
+//cs_include Scripts/BacalsoControlPlayer/FuzzyLogic/FuzzyRule.cs
+//cs_include Scripts/BacalsoControlPlayer/FuzzyLogic/FuzzyRuleCollection.cs
+//cs_include Scripts/BacalsoControlPlayer/FuzzyLogic/LinguisticVariable.cs
+//cs_include Scripts/BacalsoControlPlayer/FuzzyLogic/LinguisticVariableCollection.cs
+//cs_include Scripts/BacalsoControlPlayer/FuzzyLogic/MembershipFunction.cs
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
