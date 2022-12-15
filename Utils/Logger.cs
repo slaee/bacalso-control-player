@@ -9,7 +9,7 @@ using Skua.Core.Models.Skills;
 using Skua.Core.Options;
 using Skua.Core.Utils;
 
-namespace Utils
+namespace BacalsoControlPlayer.Utils
 {
     public class Logger
     {
