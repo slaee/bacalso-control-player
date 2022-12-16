@@ -9,11 +9,49 @@ After that, you can load and run the script like in the video shown above.
 
 ## How it works
 
-The script uses the fuzzy logic to control the HP and MP of the player. The purpose of this is that the player will not die and can continue to fight. Note that this is good for support player only. If you are a DPS player, you should not use this script.
+The script uses the fuzzy logic to control the HP and MP of the player. The purpose of this is that the player will not die and can continue to fight. Note that this is good for support player only. If you are a DPS player, you can run this script but you need to have a class equipment that burst damage so that while jumping in other cell the monster is still burning with amount of damage from your burst class skills.
 
 ## Philosophy of the script
 
 To make the terror long quest farm easier in the game.
+
+
+### Implementation
+
+```csharp
+private void _KillMonsterForItem(string monster, string item, int quantity, bool log)
+{
+    if (log)
+    {
+        int dynamicQuantity = Bot.Inventory.GetQuantity(item);
+        Log.Message($"Killing {monster} for {item}, ({dynamicQuantity}/{quantity}) [Inventory = {item}]");
+    }
+    
+    double defuzzyVal = 0.0f;
+    while (!Bot.ShouldExit && !CheckInventory(item, quantity))
+    {
+        if (!Bot.Combat.StopAttacking)
+        {
+            Bot.Combat.Attack(monster);
+            FuzzifyValues();
+            defuzzyVal = Defuzzy();
+            if (defuzzyVal < 8.6)
+            {
+                // jump to room with no monster
+                Map.JumpRoomCell("Enter", "Spawn");
+                // then rest
+                Bot.Player.Rest(true);
+            }
+            else if (defuzzyVal > 8 && Bot.Player.Cell == "Enter")
+            {
+                // resume killing the monster
+                Map.JumpRoomCell("r2", "Bottom");
+            }
+        }
+        Bot.Sleep(ActionDelay);
+    }
+}
+ ```
 
 ### Membership Functions
 ```csharp
