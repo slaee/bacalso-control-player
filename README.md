@@ -11,6 +11,10 @@ After that, you can load and run the script like in the video shown above.
 
 The script uses the fuzzy logic to control the HP and MP of the player. The purpose of this is that the player will not die and can continue to fight. Note that this is good for support player only. If you are a DPS player, you can run this script but you need to have a class equipment that burst damage so that while jumping in other cell the monster is still burning with amount of damage from your burst class skills.
 
+## Class Equipment Creators
+
+The script will be used for HP and MP regeneration as based on the skills or passive skills of the class.
+
 ## Philosophy of the script
 
 To make the terror long quest farm easier in the game.
