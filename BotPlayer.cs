@@ -95,7 +95,6 @@ public class BotPlayer
             Bot.Kill.Monster(monster);
             return;
         }
-        
         _KillMonsterForItem(monster, item, quantity, log);
     }
 
@@ -111,10 +110,10 @@ public class BotPlayer
         {
             if (!Bot.Combat.StopAttacking)
             {
-                FuzzifyValues();
                 Bot.Combat.Attack(monster);
+                FuzzifyValues();
                 defuzzyVal = Defuzzy();
-                if (defuzzyVal < 8)
+                if (defuzzyVal < 8.6)
                 {
                     Map.JumpRoomCell("Enter", "Spawn");
                     Bot.Player.Rest(true);
@@ -140,7 +139,7 @@ public class BotPlayer
     {
         SetFuzzyEngine();
         FuzzyEngine.Consequent = "PLAYERCONDITION";
-        double defuzzifyValue = FuzzyEngine.Defuzzify();;
+        double defuzzifyValue = FuzzyEngine.Defuzzify();
         Log.Message($"PLAYER CONDITION: {defuzzifyValue}");
         
         return defuzzifyValue;
