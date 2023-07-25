@@ -15,7 +15,7 @@ The script uses the fuzzy logic to control the HP and MP of the player. The purp
 
 The script will be used for HP and MP regeneration as based on the skills or passive skills of the class creation.
 
-## Philosophy of the script
+## Philosophy of this script
 
 To make the terror long quest farm easier in the game.
 
