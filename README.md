@@ -3,7 +3,7 @@
 ![video](./Assets/bot-sample-on-run.gif)
 
 ## Running the script
-To run this script you need to install the [Skua Bot](https://github.com/BrenoHenrike/Skua/releases) and setup the dependencies on it. Then clone this repo and copy as `BacalsoControlPlayer` to `Scripts` folder of Skua Bot.
+To run this script you need to install the [Skua Bot](https://github.com/BrenoHenrike/Skua/releases) and setup the dependencies on it, then clone this repo and copy as `BacalsoControlPlayer` to `Scripts` folder of Skua Bot.
 
 After that, you can load and run the script like in the shown video above.
 
