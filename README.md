@@ -3,13 +3,13 @@
 ![video](./Assets/bot-sample-on-run.gif)
 
 ## Running the script
-To run this script you need to install the [Skua Bot](https://github.com/BrenoHenrike/Skua/releases) and setup the dependencies of it. Then clone this folder and copy as `BacalsoControlPlayer` to the `Scripts` folder of the Skua Bot.
+To run this script you need to install the [Skua Bot](https://github.com/BrenoHenrike/Skua/releases) and setup the dependencies on it. Then clone this repo and copy as `BacalsoControlPlayer` to `Scripts` folder of Skua Bot.
 
-After that, you can load and run the script like in the video shown above.
+After that, you can load and run the script like in the shown video above.
 
 ## How it works
 
-The script uses the fuzzy logic to control the HP and MP of the player. The purpose of this is that the player will not die and can continue to fight. Note that this is good for support player only. If you are a DPS player, you can run this script but you need to have a class equipment that burst damage so that while jumping in other cell the monster is still burning with amount of damage from your burst class skills.
+The script uses the fuzzy logic to control the HP and MP of the player. The purpose of this is to protect the player bot not to die from monster's hit damage and can continue to fight. Note that this is good for support player only. If you are a DPS player, you can run this script but you need to have a class equipment that burst damage so while jumping in other room cell the monster is still burning with amount of damage from your burst class skills.
 
 ## Class Equipment Creators
 
